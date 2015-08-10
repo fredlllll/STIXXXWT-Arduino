@@ -1,0 +1,14 @@
+{
+  "name": "STIXXXWT",
+  "keywords": "STIXXXWT, display, stone, hmi, screen, sti",
+  "description": "Library for the basic control commands of STIXXXWT displays",
+  "url": "",
+  "include": "STIXXXWT_v1.h",
+  "authors":
+  [
+	{
+      "name": "Frederik Gelder"
+    }
+  ],
+  "frameworks": "arduino"
+}
