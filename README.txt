@@ -17,4 +17,5 @@
  * limitations under the License.
  **********************************************************************************************/
 
- just look at the code lol (nah jk i will put something here soon)
+This library is used to control the displays of Stone HMI (STIXXXWT models) with an arduinos serial.
+See examples for usage, or STIXXXWT.h for all available functions.

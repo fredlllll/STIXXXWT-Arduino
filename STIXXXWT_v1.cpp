@@ -255,6 +255,7 @@ void STIXXXWT::drawDynamicCurvePoint(uint16_t x, uint16_t ys, uint16_t ye, color
     sendShort(ye);
     send(bg);
     send(point);
+    endSendCommand();
 }
 
 void STIXXXWT::drawDynamicCurvePoints(uint16_t x, uint16_t ys, uint16_t ye, color16 bg, dynamicCurvePoint *points, uint8_t count){
@@ -274,6 +275,7 @@ void STIXXXWT::drawDynamicCurvePoints(uint16_t x, uint16_t ys, uint16_t ye, colo
     for(int i =0; i < count; i++){
         send(points[i]);
     }
+    endSendCommand();
 }
 
 void STIXXXWT::drawLinesForeground(point* points, int8_t pointCount){

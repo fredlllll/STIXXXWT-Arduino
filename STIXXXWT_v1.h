@@ -44,11 +44,9 @@ struct color16{
     
     color16(){}
     
-    color16(uint16_t value) : color(value){
-    }
+    color16(uint16_t value) : color(value){}
     
-    color16(const color16& other) : color(other.color){
-    }
+    color16(const color16& other) : color(other.color){}
     
     color16(uint8_t r, uint8_t g, uint8_t b){
         uint8_t rr = (uint8_t)(r / 255.0 * 31);
@@ -59,10 +57,12 @@ struct color16{
 };
 
 struct point{
-    point(){}
-    point(uint16_t x, uint16_t y):x(x),y(y){}
     uint16_t x;
     uint16_t y;
+    
+    point(){}
+    point(uint16_t x, uint16_t y):x(x),y(y){}
+    point(const point& other):x(other.x),y(other.y){}
 };
 
 struct circle{
@@ -71,7 +71,8 @@ struct circle{
     uint8_t radius;
     
     circle(){}
-    circle(circleType type,point center, uint8_t radius):type(type),center(center),radius(radius){}
+    circle(circleType type,const point& center, uint8_t radius):type(type),center(center),radius(radius){}
+    circle(const circle& other):type(other.type),center(other.center),radius(other.radius){}
     
     static const circleType drawInvertColor, drawForegroundColor, fillInvertColor, fillForegroundColor;
 };
@@ -84,6 +85,7 @@ struct circleSegment{
     
     circleSegment(){}
     circleSegment(point center,uint16_t radius, uint16_t startAngle, uint16_t endAngle):center(center),radius(radius),startAngle(startAngle),endAngle(endAngle){}
+    circleSegment(const circleSegment& other):center(other.center),radius(other.radius),startAngle(other.startAngle),endAngle(other.endAngle){}
 };
 
 struct rectangle{
@@ -93,6 +95,7 @@ struct rectangle{
     rectangle(){}
     rectangle(point topLeft, point bottomRight):topLeft(topLeft),bottomRight(bottomRight){};
     rectangle(uint16_t top,uint16_t left, uint16_t bottom, uint16_t right):topLeft(top,left),bottomRight(bottom,right){}
+    rectangle(const rectangle& other):topLeft(other.topLeft),bottomRight(other.bottomRight){}
 };
 
 struct dynamicCurvePoint{
@@ -101,6 +104,7 @@ struct dynamicCurvePoint{
     
     dynamicCurvePoint(){}
     dynamicCurvePoint(uint16_t y, color16 color):y(y),color(color){}
+    dynamicCurvePoint(const dynamicCurvePoint& other):y(other.y),color(other.color){}
 };
 
 class STIXXXWT
