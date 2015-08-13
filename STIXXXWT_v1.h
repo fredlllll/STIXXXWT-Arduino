@@ -107,6 +107,15 @@ struct dynamicCurvePoint{
     dynamicCurvePoint(const dynamicCurvePoint& other):y(other.y),color(other.color){}
 };
 
+struct shiftAreaData{
+    rectangle area;
+    uint16_t pixels;
+    
+    shiftAreaData(){}
+    shiftAreaData(rectangle area, uint16_t pixels):area(area),pixels(pixels){}
+    shiftAreaData(const shiftAreaData& other):area(other.area),pixels(other.pixels){}
+};
+
 class STIXXXWT
 {
   public:
@@ -141,14 +150,14 @@ class STIXXXWT
     void drawPointForeground(point p);
     void drawDynamicCurvePoint(uint16_t x, uint16_t ys, uint16_t ye, color16 bg, dynamicCurvePoint point);
     void drawDynamicCurvePoints(uint16_t x, uint16_t ys, uint16_t ye, color16 bg, dynamicCurvePoint *points, uint8_t count);
-    //void drawDynamicCurve(int16_t x, //have to test this first. no clue what it does. 0x74
     //void directDisplayOperation(); //also no clue 0x72 i think it is used to upload pictures to the display?
     void drawLinesForeground(point* points, int8_t pointCount);
     void drawLineForeground(point from, point to);
     void drawLinesBackground(point* points, int8_t pointCount);
     void drawLineBackground(point from, point to);
-    //void drawSpectrum(); // have to test this too 
-    //void drawBrokenLine(); // test this too
+    void drawSpectrum(point leftBottom, uint8_t height, uint8_t *values, uint16_t valueCount);
+    void drawSpectrum(point leftBottom, uint16_t height, uint16_t *values, uint16_t valueCount);
+    void drawBrokenLine(uint16_t x, uint16_t xdif, uint16_t *ys, uint16_t yCount);
     void drawCircles(circle *circles, int8_t circleCount);
     void drawCircle(circle circle); //test this with the types to see what exactly they do!
     void drawCircleSegment(circleSegment segment);
@@ -163,8 +172,15 @@ class STIXXXWT
     void invertRectangles(rectangle *rects, int8_t rectCount);
     void invertRectangle(rectangle rect);
     void fillAreaFromPoint(point p,color16 color);
-    //void moveArea(); //test this first
     void clearScreen();
+    void shiftAreaLeftCircular(shiftAreaData area);
+    void shiftAreasLeftCircular(shiftAreaData *areas, uint16_t count);
+    void shiftAreaRightCircular(shiftAreaData area);
+    void shiftAreasRightCircular(shiftAreaData *areas, uint16_t count);
+    void shiftAreaLeft(shiftAreaData area);
+    void shiftAreasLeft(shiftAreaData *areas, uint16_t count);
+    void shiftAreaRight(shiftAreaData area);
+    void shiftAreasRight(shiftAreaData *areas, uint16_t count);
     void displayImage(uint16_t id);
     void displayImagePartAt(uint8_t imagePartDisplayType, uint16_t id, point sourceFrom,point sourceTo,point at); //have to test display types and what they do (71, 9c, 9d)
     void displayIcons(uint16_t *ids, point *ats, uint8_t count);
@@ -200,9 +216,8 @@ class STIXXXWT
     static const hardwareKeyboardType matrix8_8,matrix4_4IO8,IO16,matrix4_8IO4;
     
     static const incomingCommand touchPressHold,touchRelease;
-    
-    //static color16 convert24bitColorTo16bitColor(uint8_t r, uint8_t g, uint8_t b);
-  private:
+
+private:
     static const uint8_t messageHeader[];
     static const uint8_t messageEnd[];
     
@@ -232,7 +247,10 @@ class STIXXXWT
     void send(circleSegment cs);
     void send(circle c);
     void send(dynamicCurvePoint dcp);
-    //void sendCommand(uint8_t command, uint8_t* data, int16_t datalen);
+    
+    //these are used by the shiftArea commands because all that changes direction is the command. so i unified this here
+    void shiftArea(uint8_t command, shiftAreaData area);
+    void shiftAreas(uint8_t command, shiftAreaData *areas, uint16_t count);
     
     void processInputCommand();
 };

@@ -314,6 +314,31 @@ void STIXXXWT::drawLineBackground(point from, point to){
     endSendCommand();
 }
 
+void STIXXXWT::drawSpectrum(point leftBottom, uint8_t height, uint8_t *values, uint16_t valueCount){
+    beginSendCommand(0x75);
+    send(leftBottom);
+    sendByte(height);
+    send(values,valueCount);
+    endSendCommand();
+}
+
+void STIXXXWT::drawSpectrum(point leftBottom, uint16_t height, uint16_t *values, uint16_t valueCount){
+    beginSendCommand(0x75);
+    send(leftBottom);
+    sendByte(0);
+    sendShort(height);
+    send(values,valueCount);
+    endSendCommand();
+}
+
+void STIXXXWT::drawBrokenLine(uint16_t x, uint16_t xdif, uint16_t *ys, uint16_t yCount){
+    beginSendCommand(0x76);
+    sendShort(x);
+    sendShort(xdif);
+    send(ys,yCount);
+    endSendCommand();
+}
+
 void STIXXXWT::drawCircles(circle *circles, int8_t circleCount){
     //sendCommand(0x57,(uint8_t*)circles, circleCount * sizeof(circle));
     beginSendCommand(0x57);
@@ -434,6 +459,38 @@ void STIXXXWT::clearScreen(){
     //sendCommand(0x52,0,0);
     beginSendCommand(0x52);
     endSendCommand();
+}
+
+void STIXXXWT::shiftAreaLeftCircular(shiftAreaData area){
+    shiftArea(0x60,area);
+}
+
+void STIXXXWT::shiftAreasLeftCircular(shiftAreaData *areas, uint16_t count){
+    shiftAreas(0x60,areas,count);
+}
+
+void STIXXXWT::shiftAreaRightCircular(shiftAreaData area){
+    shiftArea(0x61,area);
+}
+
+void STIXXXWT::shiftAreasRightCircular(shiftAreaData *areas, uint16_t count){
+    shiftAreas(0x61,areas,count);
+}
+
+void STIXXXWT::shiftAreaLeft(shiftAreaData area){
+    shiftArea(0x62,area);
+}
+
+void STIXXXWT::shiftAreasLeft(shiftAreaData *areas, uint16_t count){
+    shiftAreas(0x62,areas,count);
+}
+
+void STIXXXWT::shiftAreaRight(shiftAreaData area){
+    shiftArea(0x63,area);
+}
+
+void STIXXXWT::shiftAreasRight(shiftAreaData *areas, uint16_t count){
+    shiftAreas(0x63,areas,count);
 }
 
 void STIXXXWT::displayImage(uint16_t id){
@@ -655,6 +712,22 @@ void STIXXXWT::send(circle c){
 void STIXXXWT::send(dynamicCurvePoint dcp){
     sendShort(dcp.y);
     send(dcp.color);
+}
+
+void STIXXXWT::shiftArea(uint8_t command, shiftAreaData area){
+    beginSendCommand(command);
+    send(area.area);
+    sendShort(area.pixels);
+    endSendCommand();
+}
+
+void STIXXXWT::shiftAreas(uint8_t command, shiftAreaData *areas, uint16_t count){
+    beginSendCommand(command);
+    for(int i = 0; i < count; i++){
+        send(areas[i].area);
+        sendShort(areas[i].pixels);
+    }
+    endSendCommand();
 }
 
 /*void STIXXXWT::sendCommand(uint8_t command, uint8_t* data, int16_t datalen){
