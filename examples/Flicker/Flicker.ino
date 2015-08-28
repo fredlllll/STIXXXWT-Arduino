@@ -16,6 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **********************************************************************************************/
+/*
+ * This example lets the screen flicker in random colors. its just to demonstrate the refresh rate of the display
+ */
 
 #include <STIXXXWT_v1.h>
 
