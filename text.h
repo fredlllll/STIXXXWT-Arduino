@@ -20,8 +20,8 @@
 #ifndef TEXT_h
 #define TEXT_h
  
-int8_t convertFromUTF8ToUTF16Step(char * &source, uint16_t *destination){
-    char a = *source;
+int8_t convertFromUTF8ToUTF16Step(char * &source, uint16_t *destination){ //returns bytes that were written to destination (BYTES not WORDS)
+    char a = *(source++);
     uint32_t codepoint;
     if(a == 0){ //0 terminated
         return 0;
