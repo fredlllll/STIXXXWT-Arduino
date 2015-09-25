@@ -20,7 +20,7 @@
  * This example lets the screen flicker in random colors. its just to demonstrate the refresh rate of the display
  */
 
-#include <STIXXXWT_v1.h>
+#include <STIXXXWT.h>
 
 STIXXXWT display;
 
@@ -35,7 +35,7 @@ void setup()
 
 void loop()
 {
-    display.checkSerial(); //check if the display sent us something
+    display.loop(); //check if the display sent us something
     delay(1000/60);
     display.setForeAndBackgroundColor(display.foregroundColor,STIXXXWT::convert24bitColorTo16bitColor(random(0,255),random(0,255),random(0,255)));
     display.fillRectangleBackground(display.screenRectangle);

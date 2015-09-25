@@ -20,7 +20,7 @@
  *this is a little paint program to demonstrate the touch capabilities of the display
  */
 
-#include <STIXXXWT_v1.h>
+#include <STIXXXWT.h>
 
 STIXXXWT display;
 
@@ -35,7 +35,7 @@ void setup()
 
 void loop()
 {
-    display.checkSerial(); //check if the display sent us something
+    display.loop(); //check if the display sent us something
     delay(10);
 }
 

@@ -22,7 +22,7 @@
  * it has positive flank triggering and ~600KSa/s
  * Samples can be changed and the result will be scaled on the display accordingly
  */
-#include <STIXXXWT_v1.h>
+#include <STIXXXWT.h>
 
 const int SAMPLES = 1000;
 
@@ -40,7 +40,7 @@ void setup()
     for(int i = 0; i < 10; i++){
         display.sendHandshake(); //get infos
         delay(200);
-        display.checkSerial();
+        display.loop();
         if(display.getResX() > 0){ //sometimes i had trouble getting the resolution from the display, thats why i do this loop
             break;
         }
@@ -59,7 +59,7 @@ uint16_t samples[SAMPLES];
 char waitForTrigger[] = "Waiting for Trigger";
 void loop()
 {
-    //display.checkSerial(); //optional check if the display sent us something. we dont expect anything from the display anymore so we just dont check to save time 
+    //display.loop(); //optional check if the display sent us something. we dont expect anything from the display anymore so we just dont check to save time 
     display.displayStandardText(STIXXXWT::ASCII8_16,point(10,10), waitForTrigger, sizeof(waitForTrigger)-1);
     
     for(int i =0; i< SAMPLES;i++){ //fill array with current data
