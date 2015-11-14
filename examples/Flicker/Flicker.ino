@@ -37,6 +37,6 @@ void loop()
 {
     display.loop(); //check if the display sent us something
     delay(1000/60);
-    display.setForeAndBackgroundColor(display.foregroundColor,STIXXXWT::convert24bitColorTo16bitColor(random(0,255),random(0,255),random(0,255)));
+    display.setForeAndBackgroundColor(display.foregroundColor,color16(random(0,255),random(0,255),random(0,255)));
     display.fillRectangleBackground(display.screenRectangle);
 }

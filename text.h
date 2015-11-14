@@ -19,6 +19,7 @@
 
 #ifndef TEXT_h
 #define TEXT_h
+#include <stdint.h>
 
 int8_t convertFromUTF8ToUTF16Step(char * &source, uint16_t *destination) { //returns bytes that were written to destination (BYTES not WORDS)
 	char a = *(source++);

@@ -17,8 +17,8 @@
  * limitations under the License.
  **********************************************************************************************/
 
-#include <STIXXXWT.h>
-#include <text.h>
+#include "STIXXXWT.h"
+#include "text.h"
 
 const uint8_t STIXXXWT::messageHeader[] = { 0xAA };
 const uint8_t STIXXXWT::messageEnd[] = { 0xCC,0x33,0xC3,0x3C };
@@ -36,13 +36,22 @@ const incomingCommand STIXXXWT::touchPressHold = 0x73, STIXXXWT::touchRelease = 
 
 const circleType circle::drawInvertColor = 0x00, circle::drawForegroundColor = 0x01, circle::fillInvertColor = 0x02, circle::fillForegroundColor = 0x03; //0x04 is circle segment, but not compatible with the normal circles
 
-/*color16 STIXXXWT::convert24bitColorTo16bitColor(uint8_t r, uint8_t g, uint8_t b){
-	uint8_t rr = (uint8_t)(r / 255.0 * 31);
-	uint8_t gg = (uint8_t)(g / 255.0 * 63);
-	uint8_t bb = (uint8_t)(b / 255.0 * 31);
-	uint16_t ret = (rr << 11) | (gg << 5) | (bb);
-	return ret;
-}*/
+
+void serialSendData(STIXXXWT* sender, const uint8_t *data, const uint16_t count) { //implementation for the serial stuff
+	sender->getHardwareSerial()->write(data, count);
+}
+
+uint16_t serialReceiveData(STIXXXWT* sender, uint8_t *buffer, uint16_t start, uint16_t bufferlen) {
+	HardwareSerial *serial = sender->getHardwareSerial();
+	int avail = serial->available();
+	for (int i = 0; i < avail; i++) {
+		buffer[start++] = serial->read();
+		if (start > bufferlen) { //wraparound to prevent program to write randomly in memory
+			start = 0;
+		}
+	}
+	return avail;
+}
 
 STIXXXWT::STIXXXWT()
 {
@@ -50,15 +59,15 @@ STIXXXWT::STIXXXWT()
 }
 
 void STIXXXWT::loop() {
-	int avail = serial->available();
-	for (int i = 0; i < avail; i++) {
-		inputBytes[readBytes++] = serial->read();
+	int read = receiveDataMethod(this, inputBytes, readBytes, 514);
+	for (int i = 0; i < read; i++) {
+		readBytes++;
 		if (readBytes > 514) { //this shouldnt happen. but if it does we dont want the code to write somewhere in the memory or kill the mcu. this will also break the program
 			readBytes = 0;
 		}
-		else if (readBytes >= 6) {
+		if (readBytes >= 6) {
 			if (inputBytes[readBytes - 1] == 0x3C && inputBytes[readBytes - 2] == 0xC3 && inputBytes[readBytes - 3] == 0x33 && inputBytes[readBytes - 4] == 0xCC) { //frame end detected
-				//parse message
+																																									//parse message
 				processInputCommand();
 				readBytes = 0; //start reading input again
 			}
@@ -70,10 +79,14 @@ void STIXXXWT::connect(HardwareSerial *serial_, int32_t baudrate_) {
 	serial = serial_;
 	baudrate = baudrate_;
 	serial->begin(baudrate);
+
+	connect(serialSendData, serialReceiveData);
 }
 
-void STIXXXWT::disconnect() {
-	serial->end();
+void STIXXXWT::connect(void(*sendData)(STIXXXWT*,const uint8_t *,const uint16_t), uint16_t(*receiveData)(STIXXXWT*,uint8_t *, uint16_t,uint16_t))
+{
+	sendDataMethod = sendData;
+	receiveDataMethod = receiveData;
 }
 
 void STIXXXWT::sendHandshake() {
@@ -630,34 +643,34 @@ void STIXXXWT::processInputCommand() {
 }
 
 void STIXXXWT::beginSendCommand(uint8_t command) {
-	serial->write(messageHeader, sizeof(messageHeader));
-	serial->write(command);
+	sendDataMethod(this, messageHeader, sizeof(messageHeader));
+	sendByte(command);
 }
 
 void STIXXXWT::endSendCommand() {
-	serial->write(messageEnd, sizeof(messageEnd));
+	sendDataMethod(this, messageEnd, sizeof(messageEnd));
 }
 
 void STIXXXWT::sendByte(uint8_t b) {
-	serial->write(b);
+	sendDataMethod(this, &b, 1);
 }
 
 void STIXXXWT::sendShort(uint16_t s) {
 	uint8_t *data = (uint8_t*)&s;
-	serial->write(data[1]);
-	serial->write(data[0]);
+	sendByte(data[1]);
+	sendByte(data[0]);
 }
 
 void STIXXXWT::sendInt(uint32_t i) {
 	uint8_t *data = (uint8_t*)&i;
-	serial->write(data[3]);
-	serial->write(data[2]);
-	serial->write(data[1]);
-	serial->write(data[0]);
+	sendByte(data[3]);
+	sendByte(data[2]);
+	sendByte(data[1]);
+	sendByte(data[0]);
 }
 
 void STIXXXWT::send(uint8_t* data, uint16_t count) {
-	serial->write(data, count);
+	sendDataMethod(this, data, count);
 }
 
 void STIXXXWT::send(uint16_t* data, uint16_t count) {

@@ -19,13 +19,9 @@
 
 #ifndef STIXXXWT_h
 #define STIXXXWT_h
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
+#include <Arduino.h>
 #include <stdint.h>
-#include <simplemap.h>
+#include "simplemap.h"
 
 typedef uint8_t standardTextType;
 typedef uint8_t textEncoding;
@@ -139,7 +135,7 @@ public:
 	//methods
 	void loop();
 	void connect(HardwareSerial *serial, int32_t baudrate);
-	void disconnect();
+	void connect(void(*sendData)(STIXXXWT*,const uint8_t*,const uint16_t), uint16_t(*receiveData)(STIXXXWT*,uint8_t*, uint16_t,uint16_t));
 
 	void sendHandshake();
 
@@ -160,7 +156,7 @@ public:
 	void drawPointForeground(point p);
 	void drawDynamicCurvePoint(uint16_t x, uint16_t ys, uint16_t ye, color16 bg, dynamicCurvePoint point);
 	void drawDynamicCurvePoints(uint16_t x, uint16_t ys, uint16_t ye, color16 bg, dynamicCurvePoint *points, uint8_t count);
-	//void directDisplayOperation(); //also no clue 0x72 i think it is used to upload pictures to the display?
+	//void directDisplayOperation(); //also no clue 0x72 i think it is used to upload pictures to the display? is not documented
 	void drawLinesForeground(point* points, int8_t pointCount);
 	void drawLineForeground(point from, point to);
 	void drawLinesBackground(point* points, int8_t pointCount);
@@ -227,6 +223,7 @@ public:
 	int16_t getResX() { return resX_; }
 	int16_t getResY() { return resY_; }
 	int16_t getLastDisplayedPicture() { return lastDisplayedPicture_; }
+	HardwareSerial* getHardwareSerial() { return serial; }
 
 	//statics
 
@@ -251,6 +248,9 @@ private:
 
 	simplemap<uint8_t, void(*)(void*, uint8_t*, int16_t)> commandListeners;
 	simplemap<uint8_t, void*> commandArgs;
+
+	void(*sendDataMethod)(STIXXXWT*,const uint8_t*,const uint16_t);
+	uint16_t(*receiveDataMethod)(STIXXXWT*,uint8_t*, uint16_t,uint16_t);
 
 	// status of display
 	uint8_t majorVersion_, minorVersion_, workingModeFlags_;
