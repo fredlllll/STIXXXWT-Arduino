@@ -135,7 +135,7 @@ public:
 	//methods
 	void loop();
 	void connect(HardwareSerial *serial, int32_t baudrate);
-	void connect(void(*sendData)(STIXXXWT*,const uint8_t*,const uint16_t), uint16_t(*receiveData)(STIXXXWT*,uint8_t*, uint16_t,uint16_t));
+	void connect(void(*sendData)(STIXXXWT*, const uint8_t*, const uint16_t), uint16_t(*receiveData)(STIXXXWT*, uint8_t*, uint16_t, uint16_t));
 
 	void sendHandshake();
 
@@ -249,8 +249,8 @@ private:
 	simplemap<uint8_t, void(*)(void*, uint8_t*, int16_t)> commandListeners;
 	simplemap<uint8_t, void*> commandArgs;
 
-	void(*sendDataMethod)(STIXXXWT*,const uint8_t*,const uint16_t);
-	uint16_t(*receiveDataMethod)(STIXXXWT*,uint8_t*, uint16_t,uint16_t);
+	void(*sendDataMethod)(STIXXXWT*, const uint8_t*, const uint16_t);
+	uint16_t(*receiveDataMethod)(STIXXXWT*, uint8_t*, uint16_t, uint16_t);
 
 	// status of display
 	uint8_t majorVersion_, minorVersion_, workingModeFlags_;

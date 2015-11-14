@@ -83,7 +83,7 @@ void STIXXXWT::connect(HardwareSerial *serial_, int32_t baudrate_) {
 	connect(serialSendData, serialReceiveData);
 }
 
-void STIXXXWT::connect(void(*sendData)(STIXXXWT*,const uint8_t *,const uint16_t), uint16_t(*receiveData)(STIXXXWT*,uint8_t *, uint16_t,uint16_t))
+void STIXXXWT::connect(void(*sendData)(STIXXXWT*, const uint8_t *, const uint16_t), uint16_t(*receiveData)(STIXXXWT*, uint8_t *, uint16_t, uint16_t))
 {
 	sendDataMethod = sendData;
 	receiveDataMethod = receiveData;
