@@ -521,12 +521,12 @@ void STIXXXWT::displayVirtualKeypad(point at, uint8_t maxStrLen, bool password, 
 	endSendCommand();
 }
 
-void STIXXXWT::setCommandListener(incomingCommand cmd, void(*function)(void*, uint8_t*, int16_t), void* arg) {
+void STIXXXWT::setCommandListener(const incomingCommand cmd, void(*function)(void*, uint8_t*, int16_t), void* arg) {
 	commandListeners.set(cmd, function);
 	commandArgs.set(cmd, arg);
 }
 
-void STIXXXWT::unsetCommandListener(incomingCommand cmd) {
+void STIXXXWT::unsetCommandListener(const incomingCommand cmd) {
 	commandListeners.set(cmd, 0);
 	commandArgs.set(cmd, 0);
 }
