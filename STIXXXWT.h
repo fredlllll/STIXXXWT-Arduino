@@ -126,7 +126,7 @@ class STIXXXWT
 {
 public:
 	int32_t baudrate;
-	HardwareSerial* serial;
+	Stream* serial;
 	rectangle screenRectangle;
 	color16 foregroundColor, backgroundColor;
 
@@ -134,7 +134,7 @@ public:
 
 	//methods
 	void loop();
-	void connect(HardwareSerial *serial, int32_t baudrate);
+	void connect(Stream *serial, int32_t baudrate);
 	void connect(void(*sendData)(STIXXXWT*, const uint8_t*, const uint16_t), uint16_t(*receiveData)(STIXXXWT*, uint8_t*, uint16_t, uint16_t));
 
 	void sendHandshake();
@@ -223,7 +223,7 @@ public:
 	int16_t getResX() { return resX_; }
 	int16_t getResY() { return resY_; }
 	int16_t getLastDisplayedPicture() { return lastDisplayedPicture_; }
-	HardwareSerial* getHardwareSerial() { return serial; }
+	Stream* getSerial() { return serial; }
 
 	//statics
 

@@ -36,6 +36,7 @@ uint16_t resYm1,resX,resY;
 
 void setup()
 {
+    Serial1.begin(115200);
     display.connect(&Serial1,115200);
     for(int i = 0; i < 10; i++){
         display.sendHandshake(); //get infos

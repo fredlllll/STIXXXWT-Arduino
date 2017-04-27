@@ -38,11 +38,11 @@ const circleType circle::drawInvertColor = 0x00, circle::drawForegroundColor = 0
 
 
 void serialSendData(STIXXXWT* sender, const uint8_t *data, const uint16_t count) { //implementation for the serial stuff
-	sender->getHardwareSerial()->write(data, count);
+	sender->getSerial()->write(data, count);
 }
 
 uint16_t serialReceiveData(STIXXXWT* sender, uint8_t *buffer, uint16_t start, uint16_t bufferlen) {
-	HardwareSerial *serial = sender->getHardwareSerial();
+	Stream *serial = sender->getSerial();
 	int avail = serial->available();
 	for (int i = 0; i < avail; i++) {
 		buffer[start++] = serial->read();
@@ -75,10 +75,9 @@ void STIXXXWT::loop() {
 	}
 }
 
-void STIXXXWT::connect(HardwareSerial *serial_, int32_t baudrate_) {
+void STIXXXWT::connect(Stream *serial_, int32_t baudrate_) {
 	serial = serial_;
 	baudrate = baudrate_;
-	serial->begin(baudrate);
 
 	connect(serialSendData, serialReceiveData);
 }
