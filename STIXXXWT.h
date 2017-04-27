@@ -213,7 +213,7 @@ public:
 	void displayVirtualKeypad(point at, uint8_t maxStrLen, bool password, bool clearScreenWhenExit);
 
 	//other
-	void setCommandListener(const incomingCommand, void(*function)(void* arg, uint8_t*, int16_t), void* arg);
+	void setCommandListener(const incomingCommand cmd, void(*function)(void* arg, uint8_t*, int16_t), void* arg);
 	void unsetCommandListener(const incomingCommand);
 
 	//getter
