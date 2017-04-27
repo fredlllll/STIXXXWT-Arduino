@@ -26,7 +26,7 @@ STIXXXWT display;
 
 void setup()
 {
-  Serial.begine(19200);
+  Serial.begin(19200);
   display.connect(&Serial, 19200);
   display.sendHandshake(); //get infos
   display.clearScreen();
